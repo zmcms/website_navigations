@@ -1,6 +1,7 @@
 <?php
 namespace Zmcms\WebsiteNavigations;
 use Illuminate\Support\ServiceProvider;
+use View;
 class ZmcmsWebsiteNavigationsServiceProvider extends ServiceProvider{
 
 	public function register(){
