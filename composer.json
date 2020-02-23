@@ -1,0 +1,25 @@
+{
+	"name": "zmcms/website_navigations",
+	"description": "Nawigacia w serwisach internetowych",
+	"authors": [
+		{
+		"name": "Piotr Szkudlarek",
+		"email": "pszkudlarek@zoltanmultimedia.pl"
+		}
+	],
+	"require": {},
+	
+	"autoload": {
+            "psr-4": {
+                "Zmcms\\WebsiteNavigations\\": ""
+            }
+    	},
+	"extra": {
+    		"laravel": {
+    	    	"providers": [
+            		"Zmcms\\WebsiteNavigations\\ZmcmsWebsiteNavigationsServiceProvider"
+        		]
+    		}
+	}
+	
+}
