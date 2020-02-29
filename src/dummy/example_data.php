@@ -8,6 +8,8 @@ $website_navigations_positions = [
 	['position'=>'main'],
 	['position'=>'bottom'],
 	['position'=>'start_page'],
+	['position'=>'left'],
+	['position'=>'right'],
 ];
 
 $website_navigations_positions_names=[

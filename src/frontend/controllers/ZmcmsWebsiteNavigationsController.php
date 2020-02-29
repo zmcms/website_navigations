@@ -7,8 +7,8 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 {
 	public function render($position = 'main', $paren = null){
 		$arr =[];
-		$data['resultset'] = $this->navigations_tree(ZMCMSDB::get_records($position), $parent = null);
-		// return print_r(ZMCMSDB::get_records($position), true);
+		// $data['resultset'] = $this->navigations_tree(ZMCMSDB::get_records($position), $parent = null);
+		return print_r(ZMCMSDB::get_records($position), true);
 		return view()->first([
 			'themes.'.(Config('zmcms.main.theme') ?? 'zmcms').'.website_navigations.frontend.zmcms_nav_ul_list',
 			'zmcms_nav_ul_list'

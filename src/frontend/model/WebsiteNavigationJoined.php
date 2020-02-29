@@ -1,19 +1,22 @@
 <?php
 
 namespace Zmcms\WebsiteNavigations\Frontend\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades;
 
-class WebsiteNavigationJoined{
-	public static function get_records($position = null){
+class WebsiteNavigationJoined extends Model{
+	public function get_records($position = null){
 		// return 'position: '.$position;
 		$tblNamePrefix=(Config('database.prefix')??'');
 		$navigations		=$tblNamePrefix.'website_navigations';
 		$navigations_names		=$tblNamePrefix.'website_navigations_names';
 		$navigations_content	=$tblNamePrefix.'website_navigations_content';
-		return DB::table($navigations)
+		// return 'aa';
+		$result =  DB::table($navigations)
 		->leftJoin($navigations_names, $navigations.'.token', '=', $navigations_names.'.token')
 		->leftJoin($navigations_content, $navigations.'.token', '=', $navigations_content.'.token')
-		->select([
+		->select(
 			$navigations.'.token as token',
 			$navigations.'.parent as parent',
 			$navigations.'.position as position',
@@ -37,12 +40,13 @@ class WebsiteNavigationJoined{
 			$navigations_names.'.og_url as og_url',
 			$navigations_names.'.og_image as og_image',
 			$navigations_names.'.og_description as og_description',
-			$navigations_content.'.content as content',
-		])
+			$navigations_content.'.content as content'
+		)
 		->when(($position != null), function ($query) use ($position){
 			return $query->where('position', $position);	
 		})
 		->get() ?? '';
+		return $result;
 	}
 
 }
