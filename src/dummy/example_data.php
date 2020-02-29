@@ -14,6 +14,8 @@ $website_navigations_positions_names=[
 	['position' => 'main',			'langs_id' => 'pl',	'name' => 'Główne', ],
 	['position' => 'bottom',		'langs_id' => 'pl',	'name' => 'Stopka', ],
 	['position' => 'start_page',	'langs_id' => 'pl',	'name' => 'Strona startowa', ],
+	['position' => 'left',			'langs_id' => 'pl',	'name' => 'Lewa kolumna', ],
+	['position' => 'right',			'langs_id' => 'pl',	'name' => 'Prawa kolumna', ],
 ];
 
 $website_navigations = [

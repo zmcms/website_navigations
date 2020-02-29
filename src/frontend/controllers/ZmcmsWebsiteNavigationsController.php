@@ -2,14 +2,15 @@
 namespace Zmcms\WebsiteNavigations\Frontend\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Zmcms\WebsiteNavigations\Models\Frontend\WebsiteNavigationDb as ZMCMSDB;
+use \Zmcms\WebsiteNavigations\Frontend\Model\WebsiteNavigationJoined as ZMCMSDB;
 class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 {
 	public function render($position = 'main', $paren = null){
 		$arr =[];
-		$data['resultset'] = $this->navigations_tree(ZMCMSDB::get_records($position = 'main'), $parent = null);
+		$data['resultset'] = $this->navigations_tree(ZMCMSDB::get_records($position), $parent = null);
+		// return print_r(ZMCMSDB::get_records($position), true);
 		return view()->first([
-			'themes.'.Config('frontend.theme_name').'.zmcms.website_navigations.frontend.zmcms_nav_ul_list',
+			'themes.'.(Config('zmcms.main.theme') ?? 'zmcms').'.website_navigations.frontend.zmcms_nav_ul_list',
 			'zmcms_nav_ul_list'
 		], compact('data'));
 	}

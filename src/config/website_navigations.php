@@ -54,11 +54,20 @@ return [
 		],
 	],
 	/**
-	 * Kategoria (nawigacja) typu mixed pozwala podłączyć dowolny obiekt. Najbardziej elastyczna, jednak z uwagi na różnowodność obiektów może być najwolniejsza w działaniu przy 
-	 * większej ilości wyświetlanych obiektów.
+	 * Kategoria (nawigacja) typu mixed pozwala podłączyć dowolny obiekt. 
+	 * Najbardziej elastyczna, jednak z uwagi na różnowodność obiektów może być 
+	 * najwolniejsza w działaniu przy większej ilości wyświetlanych obiektów.
 	 */
 	'mixed'=>[
 		'single'=>'Miks',
 		'list'=>'Mixed',	
+	],
+	'homepage'=>[
+		'single'=>'',
+		'list'=>'',
+		'names'=>[
+			'pl'=>'Strona główna',
+			'en'=>'Main page',
+		],
 	],
 ];
