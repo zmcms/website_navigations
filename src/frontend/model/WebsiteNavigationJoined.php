@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades;
 
 class WebsiteNavigationJoined extends Model{
-	public function get_records($position = null){
+	public static function get_records($position = null){
 		// return 'position: '.$position;
 		$tblNamePrefix=(Config('database.prefix')??'');
 		$navigations		=$tblNamePrefix.'website_navigations';

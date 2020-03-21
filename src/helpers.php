@@ -11,7 +11,8 @@ function zmcms_website_navigations_frontend($position = 'main', $parent = null, 
 	}else{
 		return $txt;
 	}
-
-
-	
+}
+function zmcms_website_navigations_backend($position = 'main', $parent = null, $to_file=false){
+	$txt = (new \Zmcms\WebsiteNavigations\Frontend\Controllers\ZmcmsWebsiteNavigationsController())->render($position);
+	return $txt;
 }

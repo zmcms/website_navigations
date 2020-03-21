@@ -10,6 +10,7 @@ class ZmcmsWebsiteNavigations extends Migration{
 
 		$tblName=$tblNamePrefix.'website_navigations_positions';
 		Schema::create($tblName, function($table){$table->string('position', 20);});// kod pozycji, pod którą wyświetlana jest dana nawigacja
+		Schema::table($tblName, function($table){$table->integer('sort', false, true)->nullable();});	//	Sortowanie kolejności wyświetlania pozycji nawigacji w systemie CMS
 		Schema::table($tblName, function($table){$table->primary('position');});
 
 		$tblName=$tblNamePrefix.'website_navigations_positions_names';
