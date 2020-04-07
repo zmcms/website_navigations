@@ -7,10 +7,9 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 {
 	public function render($position = 'main', $paren = null){
 		$arr =[];
-		$data['resultset'] = $this->navigations_tree(ZMCMSDB::get_records($position), $parent = null);
-		// return print_r(ZMCMSDB::get_records($position), true);
+		$data['resultset'] = $this->navigations_tree(ZMCMSDB::get_records($position, $active_only = true,  $sort = [['sort', 'asc']]), $parent = null);
 		return view()->first([
-			'themes.'.(Config('zmcms.frontend.theme_name') ?? 'zmcms').'.website_navigations.frontend.zmcms_nav_ul_list',
+			'themes.'.(Config('zmcms.frontend.theme_name') ?? 'zmcms').'.frontend.zmcms_nav_ul_list',
 			'zmcms_nav_ul_list'
 		], compact('data'));
 	}
@@ -61,5 +60,19 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 			if(($n->parent == $token)) $result = true;
 		} 
 		return  $result;
+	}
+
+	public function run($data){
+		return 'xxxxxxxxxxxxx'.print_r($data, true);
+	}
+	/**
+	 * METODA WYŚWIETLAJĄCA DLA STRONY STARTOWEJ
+	 * $position - pozycja, z której wyświetlane są linki
+	 * $q - ilość wyświetlanych rekorgów
+	 */
+	public function home($position, $q, $view){
+		$resultset = ZMCMSDB::get_records($position, $active_only = false, $sort = [['sort', 'asc']], $q);
+		return view($view, compact('resultset'));
+		return $resultset;
 	}
 }

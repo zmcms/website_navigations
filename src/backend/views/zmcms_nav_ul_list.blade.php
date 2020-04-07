@@ -1,4 +1,3 @@
-
 @if(isset($data['resultset']))
 @foreach($data['resultset'] as $r)
 <li>

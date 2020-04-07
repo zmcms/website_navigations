@@ -4,70 +4,54 @@
  * Format: Kontroler@metoda
  * Tablica jest otwarta - można dodawać kolejne rodzaje linków z nawigacji stosując maskę:
  * 'rodzaj-obiektu'=>[
- * 	'single'=>'Kontroler@metoda',
+ *  'single'=>'Kontroler@metoda',
  *  'list'=>'Kontroler@metoda',
- *  'names'=>[
- * 		'pl'=>'NAzwa rodzaju w języku polskiim'
- * 	]
+ *  'name'=>[
+ *    'pl'=>'NAzwa rodzaju w języku polskiim'
+ *  ]
  * ]
  * 
  */
 return [
-	'self'=>[
-		'single'=>'Zmcms\WebsiteNavigations\Controllers\Frontend\ZmcmsWebsiteNavigationsController@single',
-		'list'=>'Zmcms\WebsiteNavigations\Controllers\Frontend\ZmcmsWebsiteNavigationsController@list',
-		'names'=>[
-			'pl'=>'Samodzielny',
-			'en'=>'Independent',
-		],
-	],
-	'static_pages'=>[
-		'single'=>'',
-		'list'=>'',
-		'names'=>[
-			'pl'=>'Strony statyczne',
-			'en'=>'Static pages',
-		],
-	],
-	'articles'=>[
-		'single'=>'',
-		'list'=>'',
-		'names'=>[
-			'pl'=>'Artykuły',
-			'en'=>'Articles',
-		],
-	],
-	'products'=>[
-		'single'=>'',
-		'list'=>'',
-		'names'=>[
-			'pl'=>'Produkty',
-			'en'=>'Products',
-		],
-	],
-	'galleries'=>[
-		'single'=>'',
-		'list'=>'',
-		'names'=>[
-			'pl'=>'Galerie',
-			'en'=>'Galleries',
-		],
-	],
-	/**
-	 * Kategoria (nawigacja) typu mixed pozwala podłączyć dowolny obiekt. 
-	 * Najbardziej elastyczna, jednak z uwagi na różnowodność obiektów może być 
-	 * najwolniejsza w działaniu przy większej ilości wyświetlanych obiektów.
-	 */
-	'mixed'=>[
-		'single'=>'Miks',
-		'list'=>'Mixed',	
-	],
-	'homepage'=>[
-		'single'=>'',
-		'list'=>'',
-		'names'=>[
-			'pl'=>'Strona główna',
-			'en'=>'Main page',
-		],
-	],
+  'self'=>[
+    'single'=>'Zmcms\WebsiteNavigations\Controllers\Frontend\ZmcmsWebsiteNavigationsController@single',
+    'list'=>'Zmcms\WebsiteNavigations\Controllers\Frontend\ZmcmsWebsiteNavigationsController@list',
+    'name'=>'Samodzielny',
+    'description'=>'',
+  ],
+  'static_pages'=>[
+    'single'=>'',
+    'list'=>'',
+    'name'=>'Strony statyczne',
+    'description'=>'',
+  ],
+  'articles'=>[
+    'single'=>'',
+    'list'=>'',
+    'name'=>'Artykuły',
+    'description'=>'',
+  ],
+  'products'=>[
+    'single'=>'',
+    'list'=>'',
+    'name'=>'Produkty',
+    'description'=>'',
+  ],
+  'galleries'=>[
+    'single'=>'',
+    'list'=>'',
+    'name'=>'Galerie',
+    'description'=>'',
+  ],
+  /**
+   * Kategoria (nawigacja) typu mixed pozwala podłączyć dowolny obiekt. 
+   * Najbardziej elastyczna, jednak z uwagi na różnowodność obiektów może być 
+   * najwolniejsza w działaniu przy większej ilości wyświetlanych obiektów.
+   */
+  'homepage'=>[
+    'single'=>'',
+    'list'=>'',
+    'name'=>'Strona główna',
+    'description'=>'',
+  ],
 ];
