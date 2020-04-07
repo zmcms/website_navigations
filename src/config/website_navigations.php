@@ -4,54 +4,23 @@
  * Format: Kontroler@metoda
  * Tablica jest otwarta - można dodawać kolejne rodzaje linków z nawigacji stosując maskę:
  * 'rodzaj-obiektu'=>[
- *  'single'=>'Kontroler@metoda',
+ * 	'single'=>'Kontroler@metoda',
  *  'list'=>'Kontroler@metoda',
- *  'name'=>[
- *    'pl'=>'NAzwa rodzaju w języku polskiim'
- *  ]
+ *  'names'=>[
+ * 		'pl'=>'NAzwa rodzaju w języku polskiim'
+ * 	]
  * ]
  * 
  */
 return [
-  'self'=>[
-    'single'=>'Zmcms\WebsiteNavigations\Controllers\Frontend\ZmcmsWebsiteNavigationsController@single',
-    'list'=>'Zmcms\WebsiteNavigations\Controllers\Frontend\ZmcmsWebsiteNavigationsController@list',
-    'name'=>'Samodzielny',
-    'description'=>'',
-  ],
-  'static_pages'=>[
-    'single'=>'',
-    'list'=>'',
-    'name'=>'Strony statyczne',
-    'description'=>'',
-  ],
-  'articles'=>[
-    'single'=>'',
-    'list'=>'',
-    'name'=>'Artykuły',
-    'description'=>'',
-  ],
-  'products'=>[
-    'single'=>'',
-    'list'=>'',
-    'name'=>'Produkty',
-    'description'=>'',
-  ],
-  'galleries'=>[
-    'single'=>'',
-    'list'=>'',
-    'name'=>'Galerie',
-    'description'=>'',
-  ],
-  /**
-   * Kategoria (nawigacja) typu mixed pozwala podłączyć dowolny obiekt. 
-   * Najbardziej elastyczna, jednak z uwagi na różnowodność obiektów może być 
-   * najwolniejsza w działaniu przy większej ilości wyświetlanych obiektów.
-   */
-  'homepage'=>[
-    'single'=>'',
-    'list'=>'',
-    'name'=>'Strona główna',
-    'description'=>'',
-  ],
+	'self'=>[
+		'run' => '\\Zmcms\\WebsiteNavigations\\Frontend\\Controllers\\ZmcmsWebsiteNavigationsController@run',
+    	'name' => 'Samodzielny',
+    	'description' => 'Link jest samodzielnym obiektem. Od razu wyświetla własną treść po kliknięciu',
+	],
+	'static_page'=>[
+    	'run' => 'ZmCms\\sd@run',
+    	'name' => 'Strona statyczna',
+    	'description' => 'Uruchamia stronę statyczną',
+	],
 ];

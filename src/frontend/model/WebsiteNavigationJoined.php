@@ -6,10 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades;
 
 class WebsiteNavigationJoined extends Model{
-	/**
-	 * $sort=[['sort', 'asc']]
-	 */
-	public static function get_records($position = null, $active_only = true, $sort = null, $q = null){
+	public static function get_records($position = null){
 		// return 'position: '.$position;
 		$tblNamePrefix=(Config('database.prefix')??'');
 		$navigations		=$tblNamePrefix.'website_navigations';
@@ -29,7 +26,6 @@ class WebsiteNavigationJoined extends Model{
 			$navigations.'.active as active',
 			$navigations.'.icon as icon',
 			$navigations.'.ilustration as ilustration',
-			$navigations.'.images_resized as images_resized',
 			$navigations.'.date_from as date_from',
 			$navigations.'.date_to as date_to',
 			$navigations_names.'.langs_id as langs_id',
@@ -49,20 +45,31 @@ class WebsiteNavigationJoined extends Model{
 		->when(($position != null), function ($query) use ($position){
 			return $query->where('position', $position);	
 		})
-		->when(($active_only), function ($query){
-			return $query->where('active', '1');		
-		})
-		->when(($sort != null), function ($query) use ($sort){
-			foreach ($sort as $s) {
-				$query->orderBy($s[0], $s[1]);	
-			}
-			return $query;
-		})
-		->when(($q != null), function ($query) use ($q){
-			return $query->limit($q);	
-		})
 		->get() ?? '';
 		return $result;
 	}
 
 }
+					// 'token'				=> $n->token,
+					// 'parent'			=> $n->parent,
+					// 'position'			=> $n->position,
+					// 'sort'				=> $n->sort,
+					// 'access'			=> $n->access,
+					// 'type'				=> $n->type,
+					// 'active'			=> $n->active,
+					// 'icon'				=> $n->icon,
+					// 'ilustration'		=> $n->ilustration,
+					// 'date_from'			=> $n->date_from,
+					// 'date_to'			=> $n->date_to,
+					// 'langs_id'			=> $n->langs_id,
+					// 'link'				=> $n->link,
+					// 'link_override'		=> $n->link_override,
+					// 'name'				=> $n->name,
+					// 'slug'				=> $n->slug,
+					// 'meta_keywords'		=> $n->meta_keywords,
+					// 'meta_description'	=> $n->meta_description,
+					// 'og_title'			=> $n->og_title,
+					// 'og_type'			=> $n->og_type,
+					// 'og_url'			=> $n->og_url,
+					// 'og_image'			=> $n->og_image,
+					// 'og_description'	=> $n->og_description,

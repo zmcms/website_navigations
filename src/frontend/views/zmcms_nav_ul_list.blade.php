@@ -2,11 +2,17 @@
 @if(isset($data['resultset']))
 @foreach($data['resultset'] as $r)
 <li>
-	<a href="{{$r['link']}}" @if(isset($r['children']) && count($r['children'])>0)id="drop_down_{{$r['token']}}"@endif >{{$r['name']}}</a>
+	<a href="{{$r['link']}}">{{$r['name']}}</a>
 @if(isset($r['children']) && count($r['children'])>0)
-<ul id="dropped_{{$r['token']}}">
-		@each('themes.'.Config('zmcms.frontend.theme_name').'.frontend.zmcms_nav_ul_sublist', $r['children'], 'a')
-</ul>
+@if(view()->exists('themes.'.Config('frontend.theme_name').'.zmcms.website_navigations.frontend.zmcms_nav_ul_list'))
+	<ul>
+		@each('themes.'.Config('frontend.theme_name').'.zmcms.website_navigations.frontend.zmcms_nav_ul_sublist', $r['children'], 'a')
+	</ul>
+@else
+	<ul>
+		@each('zmcms_nav_ul_sublist', $r['children'], 'a')
+	</ul>
+@endif
 @endif
 </li>
 @endforeach

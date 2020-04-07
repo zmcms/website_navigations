@@ -30,8 +30,7 @@ class ZmcmsWebsiteNavigations extends Migration{
 		Schema::table($tblName, function($table){$table->string('active', 1);}); //Aktywny - 1, Nieaktywny -0. Aktywny się wyświetla, nieaktywny nie.
 		Schema::table($tblName, function($table){$table->string('icon', 150)->nullable();});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
 		Schema::table($tblName, function($table){$table->string('ilustration', 150)->nullable();});// Ilustracja kategorii
-		Schema::table($tblName, function($table){$table->text('images_resized')->nullable();});// Ilustracja kategorii
-		Schema::table($tblName, function($table){$table->string('date_from', 10);}); // data od kiedy wyświetla się dana pozycja w nawigacji,
+		Schema::table($tblName, function($table){$table->string('date_from', 10)->nullable();}); // data od kiedy wyświetla się dana pozycja w nawigacji,
 		Schema::table($tblName, function($table){$table->string('date_to', 10)->nullable();}); // data do kiedy wyświetla się dana pozycja w nawigacji, (null - wyświetla się zawsze, chyba, że active jest "0")
 		Schema::table($tblName, function($table){$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));});//Imię
 		Schema::table($tblName, function($table){$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));});//Imię
@@ -43,8 +42,8 @@ class ZmcmsWebsiteNavigations extends Migration{
 		Schema::table($tblName, function($table){$table->string('langs_id', 5);});// kod języka, np. pl, en itp
 		Schema::table($tblName, function($table){$table->string('link', 150);});// link, np. o-nas, oferta/serwery, https://onet.pl, relacja do "website_navigations"
 		Schema::table($tblName, function($table){$table->string('link_override', 150)->nullable();});// link, np. o-nas, oferta/serwery, https://onet.pl, relacja do "website_navigations"
-		Schema::table($tblName, function($table){$table->string('name', 150);});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
-		Schema::table($tblName, function($table){$table->string('slug', 150);});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
+		Schema::table($tblName, function($table){$table->string('name', 50);});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
+		Schema::table($tblName, function($table){$table->string('slug', 50);});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
 		Schema::table($tblName, function($table){$table->string('meta_keywords', 150)->nullable();});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
 		Schema::table($tblName, function($table){$table->string('meta_description', 150)->nullable();});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
 		Schema::table($tblName, function($table){$table->string('og_title', 150)->nullable();});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
@@ -54,8 +53,7 @@ class ZmcmsWebsiteNavigations extends Migration{
 		Schema::table($tblName, function($table){$table->string('og_description', 150)->nullable();});// Nazwa (Wyświetla się jako nazwa linku <a>Nazwa linku</a>)
 		Schema::table($tblName, function($table){$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));});//Imię
 		Schema::table($tblName, function($table){$table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP'));});//Imię
-		Schema::table($tblName, function($table){$table->index(['token']);});
-		Schema::table($tblName, function($table){$table->primary(['langs_id', 'link'], 'zmcmswnnkey');}); // Link w ramach języka musi być niepowtarzalny
+		Schema::table($tblName, function($table){$table->primary(['token', 'langs_id'], 'zmcmswnnkey');});
 		Schema::table($tblName, function($table) use ($tblNamePrefix){$table->foreign('token')->references('token')->on($tblNamePrefix.'website_navigations')->onUpdate('cascade')->onDelete('cascade');});
 
 		$tblName=$tblNamePrefix.'website_navigations_content';
