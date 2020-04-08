@@ -25,8 +25,8 @@ class ZmcmsWebsiteNavigationsServiceProvider extends ServiceProvider{
 			__DIR__.'/backend/js' => base_path('public/themes/zmcms/backend/js'),
 			__DIR__.'/frontend/js' => base_path('public/themes/zmcms/frontend/js'),
 		]);
-		View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/backend/views');
-		View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/frontend/views');
+		// View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/backend/views');
+		// View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/frontend/views');
 	}
 
 }
