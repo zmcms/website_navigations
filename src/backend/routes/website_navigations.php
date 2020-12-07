@@ -1,4 +1,5 @@
 <?php
+// echo 'nav<br />';
 $prefix = Config('zmcms.main.backend_prefix');
 Route::middleware(['BackendUser'])->group(function () use($prefix){
 	Route::get($prefix.'/website/navigations/zmcms_website_navigations_positions', 
@@ -61,4 +62,14 @@ Route::middleware(['BackendUser'])->group(function () use($prefix){
 	Route::get($prefix.'/website/navigations/zmcms_website_navigations_delete/{token}',
 		 'Zmcms\WebsiteNavigations\Backend\Controllers\ZmcmsWebsiteNavigationsPanelController@zmcms_website_navigations_delete')
 		->name('website_navigations_manage');	
+	Route::get($prefix.'/zmcms_website_navigations_get_parent_link/{token?}',
+		 'Zmcms\WebsiteNavigations\Backend\Controllers\ZmcmsWebsiteNavigationsPanelController@zmcms_website_navigations_get_parent_link')
+		->name('website_navigations_manage');	
+	Route::get($prefix.'/zmcms_website_navigations_linker_frm/{token}/{type}/{slug?}',
+		 'Zmcms\WebsiteNavigations\Backend\Controllers\ZmcmsWebsiteNavigationsPanelController@zmcms_website_navigations_linker_frm')
+		->name('website_navigations_manage');
+	Route::get($prefix.'/zmcms_website_navigations_linker_toggle/{navtoken}/{navslug}/{linkedobjtoken}/{linkedobjtype}/{linkedobjslug}',
+		 'Zmcms\WebsiteNavigations\Backend\Controllers\ZmcmsWebsiteNavigationsPanelController@zmcms_website_navigations_linker_toggle')
+		->name('website_navigations_manage');
+	
 });

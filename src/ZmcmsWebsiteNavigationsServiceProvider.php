@@ -12,9 +12,9 @@ class ZmcmsWebsiteNavigationsServiceProvider extends ServiceProvider{
 	}
 
 	public function boot(){
-		$this->loadRoutesFrom(__DIR__.DIRECTORY_SEPARATOR.'backend\routes'.DIRECTORY_SEPARATOR.'website_navigations.php');
-		$this->loadRoutesFrom(__DIR__.DIRECTORY_SEPARATOR.'backend\routes'.DIRECTORY_SEPARATOR.'website_navigations_console.php');
-		$this->loadRoutesFrom(__DIR__.DIRECTORY_SEPARATOR.'frontend\routes'.DIRECTORY_SEPARATOR.'website_navigations.php');
+		// $this->loadRoutesFrom(__DIR__.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'routes'.DIRECTORY_SEPARATOR.'website_navigations.php');
+		// $this->loadRoutesFrom(__DIR__.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'routes'.DIRECTORY_SEPARATOR.'website_navigations_console.php');
+		// $this->loadRoutesFrom(__DIR__.DIRECTORY_SEPARATOR.'frontend'.DIRECTORY_SEPARATOR.'routes'.DIRECTORY_SEPARATOR.'website_navigations.php');
 		$this->loadMigrationsFrom(__DIR__.'/migrations');
 		$this->publishes([
 			__DIR__.'/backend/views' => base_path('resources/views/themes/zmcms/backend'),
@@ -25,8 +25,8 @@ class ZmcmsWebsiteNavigationsServiceProvider extends ServiceProvider{
 			__DIR__.'/backend/js' => base_path('public/themes/zmcms/backend/js'),
 			__DIR__.'/frontend/js' => base_path('public/themes/zmcms/frontend/js'),
 		]);
-		// View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/backend/views');
-		// View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/frontend/views');
+		View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/backend/views');
+		View::addLocation(__DIR__.DIRECTORY_SEPARATOR.'/frontend/views');
 	}
 
 }

@@ -21,9 +21,14 @@ class ZmcmsWebsiteNavigationsPanelController extends \App\Http\Controllers\Contr
 	}
 
 	public function website_navigations_create_link($position, $parent=null){
+		// return $parent;
 		$data['positions'] = Q::navigation_positions_list(0, $order=[], $filter=[]);
+		// return '<pre>'.print_r($data['positions'], true).'</pre>';
 		$data['position'] = $position;
 		$data['parent'] = $parent;
+		// return $parent;
+		$data['tree'] =  (new \Zmcms\WebsiteNavigations\Frontend\Controllers\ZmcmsWebsiteNavigationsController())->navigations_tree(ZMCMSDB::get_records($position, $active_only = false, [['sort', 'asc']]), $parent = null);
+		$data['parentdata'] = ZMCMSDB::get_parent_link($data['parent']);
 		$settings=[
 			'position' => $position,
 			'action' => 'create',
@@ -66,12 +71,29 @@ class ZmcmsWebsiteNavigationsPanelController extends \App\Http\Controllers\Contr
 				$d['og_image'],
 				base_path().DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.Config('zmcms.frontend.theme_name').DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'store'.DIRECTORY_SEPARATOR.'nav'.DIRECTORY_SEPARATOR.'og',
 				str_slug($data['name']).'.jpg');
-		$data['images_resized'] = json_encode($res); // ZESTAW ŚCIEŻEK DO SKODOWANYCH ILUSTRACJI, IKON ITD Z PODZIAŁEM NA SZEROKOŚCI
+		if(isset($res))
+			$data['images_resized'] = json_encode($res); // ZESTAW ŚCIEŻEK DO SKODOWANYCH ILUSTRACJI, IKON ITD Z PODZIAŁEM NA SZEROKOŚCI
+		else
+			$data['images_resized']=null;
 		$result = Q::zmcms_website_navigation_create($data);
+		// Gdy utworzyłem obiekt publikuję do niego link w tabeli routingów
+		if($result['result']=='ok'){
+			$params = [
+				'run'=>Config(Config('zmcms.frontend.theme_name').'.website_navigations.'.$data['type'].'.run'),
+				'token_nav'=>$result['objtoken'],//Token nawigacji
+				'token_obj'=>$result['objtoken'],//Token przypinanego obiektu. Jeżeli obiektem jest sama nawigacja, to token może być ten sam
+				'type'=>$data['type'],//Rodzaj przypinanego obiektu
+			];
+			Q::create_route(
+				$path = ((strlen($data['link_override'])>0)?$data['link_override']:$data['link']), 
+				$parameters = json_encode($params)
+			);
+		}
 		return json_encode($result);
 	}
 	public function zmcms_website_navigations_update_link(Request $request){
 		$data = $request->all();
+		// return print_r($request->all(), true);
 		$res = [];
 		//IKONY
 		$d['icon'] = 
@@ -107,6 +129,28 @@ class ZmcmsWebsiteNavigationsPanelController extends \App\Http\Controllers\Contr
 		$data['images_resized'] = json_encode($res); // ZESTAW ŚCIEŻEK DO SKODOWANYCH ILUSTRACJI, IKON ITD Z PODZIAŁEM NA SZEROKOŚCI
 		$result = Q::zmcms_website_navigation_update($data);
 		$result['content']=$res;
+
+		if($result['result']=='ok'){
+			$params = [
+				'run'=>Config(Config('zmcms.frontend.theme_name').'.website_navigations.'.$data['type'].'.run'),
+				'token_nav'=>$data['token'],//Token nawigacji
+				'token_obj'=>$data['token'],//Token przypinanego obiektu. Jeżeli obiektem jest sama nawigacja, to token może być ten sam
+				'type'=>$data['type'],//Rodzaj przypinanego obiektu
+			];
+			if((strlen($data['link_override_old'])==0) && strlen($data['link_override'])>0){
+				Q::replace_route(addslashes($data['link_old']) , addslashes($data['link_override']) , json_encode($params));
+			}
+			if((strlen($data['link_override_old'])==0) && strlen($data['link_override'])==0){
+				Q::replace_route(addslashes($data['link_old']) , addslashes($data['link']) , json_encode($params));
+			}
+			if((strlen($data['link_override_old'])>0) && strlen($data['link_override'])==0){
+				Q::replace_route(addslashes($data['link_override_old']) , addslashes($data['link']) , json_encode($params));
+			}
+			if((strlen($data['link_override_old'])>0) && strlen($data['link_override'])>0){
+				Q::replace_route(addslashes($data['link_override_old']) , addslashes($data['link_override']) , json_encode($params));
+			}
+		}
+
 		return json_encode($result);	
 	}
 	public function zmcms_website_navigations_edit($token){
@@ -123,8 +167,62 @@ class ZmcmsWebsiteNavigationsPanelController extends \App\Http\Controllers\Contr
 			'result'	=>	'err',
 			'code'		=>	'notoken',
 			'msg' 		=>	___('Nie można usunąć linku - nie podano tokena.'),
+			// 'token'		=>$token,
 		]);
+		Q::delete_route_by_params($token);
 		return Q::delete_navigation_object($token);
 		return $token;
+	}
+	public function zmcms_website_navigations_get_parent_link($token = null){
+		if($token == null) return null;
+		return ZMCMSDB::get_link($token);
+	}
+
+	/**
+	 * LINKUJE OBIEKTY POD DANĄ POZYCJĘ NAWIGACJI
+	 */
+	public function zmcms_website_navigations_linker_frm($token, $type, $slug = null){
+		// DRZEWO NAWIGACJI
+		$res = (new \Zmcms\WebsiteNavigations\Frontend\Controllers\ZmcmsWebsiteNavigationsController())->navigations_tree(ZMCMSDB::get_records($position = null, $active_only = false, $sort = [['sort', 'asc']], $q = null, $langs_id = null));
+		$data = $settings = []; foreach ($res as $r) {$data[$r['position']][] = $r; }
+		// TABLICA POZYCJI
+		$pos = Q::navigation_positions_list($paginate = 0, $order=[], $filter=[]);
+		$positions = [];
+		foreach($pos as $p =>$v)
+			$positions[$v->position] = $v->name;
+		$linked = Q::linker_links_for_object($token, $type);
+		$linked_object = [
+			'token'	=>$token,
+			'type'	=>$type,
+			'slug'  =>$slug,
+		];
+		return view(
+			'themes.'.Config('zmcms.frontend.theme_name').'.backend.zmcms_website_navigations_linker', 
+			compact('data', 'positions', 'linked', 'linked_object')
+		);
+	}
+	/**
+	 * PRZYPINA LUB ODPOINA OBIEKT OD LINKU Z NAWIGACJI
+	 */
+	public function zmcms_website_navigations_linker_toggle($navtoken, $navslug, $linkedobjtoken, $linkedobjtype, $linkedobjslug = null){
+		Q::zmcms_website_navigations_linker_toggle($navtoken, $linkedobjtoken, $linkedobjtype);
+		$params = [];
+		$params = [
+			'run'=>Config(Config('zmcms.frontend.theme_name').'.website_navigations.'.$linkedobjtype.'.run'),
+			'token_nav'=>$navtoken,
+			'token_obj'=>$linkedobjtoken,
+			'type'=>$linkedobjtype,
+		];
+		$link = '';
+		$nav_obj = Q::get_navigation_object($navtoken)['data'][0];
+		(
+			strlen($nav_obj->link_override)>0
+		)? 
+		$link = $nav_obj->link_override
+		: 
+		$link = $nav_obj->link;
+		if($linkedobjslug!=null)$link = $link.'/'.$linkedobjslug;
+		// return $link;
+		Q::create_route($path = $link, $parameters = json_encode($params));
 	}
 }

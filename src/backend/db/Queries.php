@@ -187,6 +187,7 @@ class Queries{
 				'result'	=>	'ok',
 				'code'		=>	'ok',
 				'msg' 		=>	___('Dodano nowy obiekt nawigacji'),
+				'objtoken'	=> $data['token'],
 			]);
 		}catch(\Illuminate\Database\QueryException $e){
 			DB::rollBack();
@@ -330,6 +331,29 @@ class Queries{
 			'data'		=> $arr,
 		]);
 	}
+	public static function get_navigation_children($tokens = []){
+		$wnav = (Config('database.prefix')??'').'website_navigations';
+		$children = [];
+		$count = DB::table($wnav)->whereIn('parent', $tokens)->count();
+		if($count > 0){
+			$children = self::get_navigation_children_tokens($tokens);
+			$count2 = DB::table($wnav)->whereIn('parent', $children)->count();
+			if($count2>0) $children = array_merge($children, self::get_navigation_children($children));
+		}
+
+	}
+	public static function get_navigation_children_tokens($tokens = []){
+		$wnav = (Config('database.prefix')??'').'website_navigations';
+		$res = [];
+		$resultset =  DB::table($wnav)->whereIn('parent', $tokens)->select([
+			'token',
+		])
+		->get();
+		foreach($resultset as $r)
+			$res[]=$r->token;
+
+		return $res;
+	}
 	public static function delete_navigation_object($token){
 		$wnav = (Config('database.prefix')??'').'website_navigations';
 		$test = DB::table($wnav)
@@ -349,6 +373,7 @@ class Queries{
 				'code'		=>	'ok',
 				'msg' 		=>	___('Link został usunięty.'),
 			]);
+			
 		}catch(\Illuminate\Database\QueryException $e){
 			DB::rollBack();
 			return json_encode([
@@ -363,9 +388,76 @@ class Queries{
 				'msg' 		=>	___('Błąd krytyczny.'),
 			]);
 	}
+	/**
+	 * ZWRACA REKORDY LINKÓW NAWIGACJI, DLA KTÓRYCH PRZYPISANO 
+	 * WSKAZANY PRZEZ ZMIENNE $token ORAZ $typr OBIEKT
+	 */
+	public static function linker_links_for_object($token, $type){
+		$wnav_linker = (Config('database.prefix')??'').'website_navigations_linker';
+		$res = DB::table($wnav_linker)->where('obj_token', $token)->where('obj_type', $type)->get();
+		$arr = [];
+		foreach ($res as $v) {
+			$arr[] = $v->nav_token;
+		}
+		return $arr;
+	}
+	public static function zmcms_website_navigations_linker_toggle($navtoken, $linkedobjtoken, $linkedobjtype){
+		$wnav_linker = (Config('database.prefix')??'').'website_navigations_linker';
+		//DO TABELI "website_navigations_linker"
+		$count = DB::table($wnav_linker)->where('nav_token', $navtoken)->where('obj_token', $linkedobjtoken)->where('obj_type', $linkedobjtype)->count();
+		if($count>0){
+			DB::table($wnav_linker)->where('nav_token', $navtoken)->where('obj_token', $linkedobjtoken)->where('obj_type', $linkedobjtype)->delete();
+		}else{
+			DB::table($wnav_linker)->insert(['nav_token' => $navtoken,'obj_token' => $linkedobjtoken,'obj_type' => $linkedobjtype,]);
+		}
+	}
+
+
+
+	public static function create_route($path, $parameters){
+		$wnav_routes = (Config('database.prefix')??'').'zmcms_routes_table';
+		// DB::table($wnav_routes)->insert([
+				// 'path'=>$path,
+				// 'parameters' => $parameters,
+			// ]);
+		
+		$count = DB::table($wnav_routes)->where('path', $path)->count();
+		if($count > 0 )
+			DB::table($wnav_routes)->where('path', $path)->delete();
+		else
+			DB::table($wnav_routes)->insert([
+				'path'=>$path,
+				'parameters' => $parameters,
+			]);
+	}
+	public static function delete_route($path){
+		$wnav_routes = (Config('database.prefix')??'').'zmcms_routes_table';
+		DB::table($wnav_routes)->where('path', 'rlike', $path)->delete();
+	}
+	public static function replace_route($path_old, $path_new, $parameters = null){
+		$wnav_routes = (Config('database.prefix')??'').'zmcms_routes_table';
+		
+		//Routingi dokładnie pasujące do podanego w $path_old aktualizują także parametry
+		DB::table($wnav_routes)
+				->where('path', '=',$path_old)
+				->update([
+					'parameters'=>$parameters,
+				]);
+		$parameters = str_replace('"', '\"', $parameters);
+		$sql='UPDATE `zmcms_routes_table` SET `path`= REPLACE(`path`, "'.$path_old.'", "'.$path_new.'") WHERE `path` like "%'.$path_old.'%"';
+		DB::statement($sql);
+		$sql='UPDATE `zmcms_routes_table` SET `path`= REPLACE(`path`, "'.$path_old.'/", "'.$path_new.'/") WHERE `path` like "%'.$path_old.'/%"';
+		DB::statement($sql);
+	}
+
+
+	public static function delete_route_by_params($params){
+		$wnav_routes = (Config('database.prefix')??'').'zmcms_routes_table';
+		DB::table($wnav_routes)
+				->where('parameters', 'rlike', $params)
+				->delete();
+	}
 }
-
-
 /**
  * 
 
