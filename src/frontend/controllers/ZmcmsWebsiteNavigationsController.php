@@ -63,11 +63,29 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 		return  $result;
 	}
 
-	public function run($token_nav, $token_obj, $type){
+	public function run($token_nav, $token_obj, $type, $opt){
+		$str = '';
+		$i=0;
 		$data['navigation']['data'] = ZMCMSDB::get_navigation($token_obj, $langs_id = null);
 		$data['navigation']['parents']= ZMCMSDB::get_parent_link($token_nav, $langs_id = null);
+		$data['opt_runs'] = [];
+		if(
+			is_array(Config(Config('zmcms.frontend.theme_name').'.frontend.opt_runs')) && 
+			Config(Config('zmcms.frontend.theme_name').'.frontend.opt_runs')!=[]
+		)
+		foreach(Config(Config('zmcms.frontend.theme_name').'.frontend.opt_runs') as $r){
+			$data['opt_runs'][] = \App::call(
+				$r,
+				[	'obj_type'=>$type,
+					'obj_token'=>$token_obj,
+					'params'=> [$token_nav, $token_obj, $type],
+				]
+			);
+		}
+		
+		// $str .= print_r(Config(Config('zmcms.frontend.theme_name').'.frontend.opt_runs'), true);
 		$head = [
-			'title' => $data['navigation']['data']->name.' - '.Config((Config('zmcms.frontend.theme_name') ?? 'zmcms').'.contact_data.headquarters.business_name'),
+			'title' => $data['navigation']['data']->name.' - '.Config((Config('zmcms.frontend.theme_name') ?? 'zmcms').'.seosem.head.title'),
 			'keywords' => $data['navigation']['data']->meta_keywords,
 			'description' => $data['navigation']['data']->meta_description,
 			'canonical' => $data['navigation']['data']->canonical ?? null,
@@ -79,7 +97,7 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 			'og:locale' => $data['navigation']['data']->langs_id,
 			'language' => $data['navigation']['data']->langs_id,
 		];
-		return view('themes.'.Config('zmcms.frontend.theme_name').'.frontend.zmcms_website_'.$type, compact('data', 'head'));
+		return view('themes.'.Config('zmcms.frontend.theme_name').'.frontend.zmcms_website_'.$type, compact('data', 'head', 'str'));
 	}
 /**
  [og_title] => Hurtownia Horożaniecki - wszystko dla budownictwa
@@ -105,7 +123,7 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 	 * $q - ilość wyświetlanych rekorgów
 	 */
 	public function home($position, $q, $view){
-		$resultset = ZMCMSDB::get_records($position, $active_only = false, $sort = [['sort', 'asc']], $q);
+		$resultset = ZMCMSDB::get_records($position, $active_only = false, $sort = [['sort', 'desc']], $q);
 		return view($view, compact('resultset'));
 		return $resultset;
 	}
