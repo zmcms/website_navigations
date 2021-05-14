@@ -6,7 +6,6 @@ Route::middleware(['FrontendUser'])->group(function () {
 	 * WYSYŁKA FORMULARZY
 	 */
 	// if(Request::path() == '/frm_submit')
-	Route::any('curltest', 'Zmcms\Main\Frontend\Controllers\ZmcmsMainController@curltest');
 	Route::post('frm_submit', 'Zmcms\Main\Frontend\Controllers\ZmcmsMainController@frm_submit');
 	
 	Route::get('{any}', function () {
@@ -16,8 +15,15 @@ Route::middleware(['FrontendUser'])->group(function () {
 		if(Request::path() == '/')
 			//Gdy jest strona główna
 			return \App::call(
-				'Zmcms\Main\Frontend\Controllers\ZmcmsMainController@homepage'
-			);
+			'Zmcms\Main\Frontend\Controllers\ZmcmsMainController@homepage'
+		);
+			// return \App::call(
+				// 'Zmcms\Main\Frontend\Controllers\ZmcmsMainController@frm_submit',
+				// [
+					// 'request'=>$request,
+				// ]
+			// );
+
 
 		/**
 		 * GDY NIE MAMY SRONY GŁÓWNEJ, SPRAWDZAM W TABELI ROUTINGU CZY JEST WPIS O DANYM LINKU
@@ -36,7 +42,6 @@ Route::middleware(['FrontendUser'])->group(function () {
 					'token_nav'=>$params->token_nav,
 					'token_obj'=>$params->token_obj,
 					'type'=>$params->type,
-					'opt'=>$params->opt ?? null,
 				]
 			);
 		}

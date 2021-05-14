@@ -444,7 +444,6 @@ class Queries{
 					'parameters'=>$parameters,
 				]);
 		$parameters = str_replace('"', '\"', $parameters);
-		
 		$sql='UPDATE `zmcms_routes_table` SET `path`= REPLACE(`path`, "'.$path_old.'", "'.$path_new.'") WHERE `path` like "%'.$path_old.'%"';
 		DB::statement($sql);
 		$sql='UPDATE `zmcms_routes_table` SET `path`= REPLACE(`path`, "'.$path_old.'/", "'.$path_new.'/") WHERE `path` like "%'.$path_old.'/%"';
@@ -457,18 +456,6 @@ class Queries{
 		DB::table($wnav_routes)
 				->where('parameters', 'rlike', $params)
 				->delete();
-	}
-
-	public static function routes_list($filter = []){
-		$wnav_routes = (Config('database.prefix')??'').'zmcms_routes_table';
-		return DB::table($wnav_routes)
-		->when($filter!=[], function ($query) use ($filter){
-				foreach($filter as $k => $v){
-					$query->orderBy($k, $v);
-				}
-				return $query;
-			})
-		->get();
 	}
 }
 /**

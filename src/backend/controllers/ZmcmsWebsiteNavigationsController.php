@@ -164,6 +164,6 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 			'action' => 'update',
 			'btnsave' => 'Aktualizuj rodzaj',
 		];
-		return view('themes.'.Config('zmcms.frontend.theme_name').'backend.zmcms_website_navigation_type_new_frm', compact('data', 'settings'));
+		return view('themes.'.Config('zmcms.frontend.theme_name').'.backend.zmcms_website_navigation_type_new_frm', compact('data', 'settings'));
 	}
 }
