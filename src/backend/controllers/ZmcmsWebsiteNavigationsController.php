@@ -27,6 +27,7 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 	public function zmcms_website_navigation_position_new_frm(){
 		$data = [];
 		$settings=[
+			'title' => 'Nowa pozycja nawigacji',
 			'action' => 'create',
 			'btnsave' => 'Zapisz zmiany',
 		];
@@ -52,6 +53,7 @@ class ZmcmsWebsiteNavigationsController extends \App\Http\Controllers\Controller
 		$data = Q::navigation_positions_list($paginate = Session('row_count'), $order=[], $filter=[[(Config('database.prefix')??'').'website_navigations_positions.position', '=' ,$position]]);
 		// return json_encode($data);
 		$settings=[
+			'title' => 'Edycja pozycji nawigacji',
 			'action' => 'update',
 			'btnsave' => 'Zapisz zmiany',
 		];
