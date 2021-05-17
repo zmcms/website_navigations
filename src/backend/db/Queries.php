@@ -422,11 +422,14 @@ class Queries{
 			// ]);
 		
 		$count = DB::table($wnav_routes)->where('path', $path)->count();
-		if($count > 0 )
+		if($count > 0 ){
 			DB::table($wnav_routes)->where('path', $path)->delete();
+			$this->create_route($path, $parameters);
+		}
 		else
 			DB::table($wnav_routes)->insert([
 				'path'=>$path,
+				'token'=>(json_decode($parameters))->token_nav,
 				'parameters' => $parameters,
 			]);
 	}
@@ -438,14 +441,17 @@ class Queries{
 		$wnav_routes = (Config('database.prefix')??'').'zmcms_routes_table';
 		
 		//Routingi dokładnie pasujące do podanego w $path_old aktualizują także parametry
+		
 		DB::table($wnav_routes)
 				->where('path', '=',$path_old)
 				->update([
+					'path'=>$path_new,
+					'token'=>(json_decode($parameters))->token_nav,
 					'parameters'=>$parameters,
 				]);
 		$parameters = str_replace('"', '\"', $parameters);
-		$sql='UPDATE `zmcms_routes_table` SET `path`= REPLACE(`path`, "'.$path_old.'", "'.$path_new.'") WHERE `path` like "%'.$path_old.'%"';
-		DB::statement($sql);
+		// $sql='UPDATE `zmcms_routes_table` SET `path`= REPLACE(`path`, "'.$path_old.'", "'.$path_new.'") WHERE `path` like "%'.$path_old.'%"';
+		// DB::statement($sql);
 		$sql='UPDATE `zmcms_routes_table` SET `path`= REPLACE(`path`, "'.$path_old.'/", "'.$path_new.'/") WHERE `path` like "%'.$path_old.'/%"';
 		DB::statement($sql);
 	}
