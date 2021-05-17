@@ -424,7 +424,7 @@ class Queries{
 		$count = DB::table($wnav_routes)->where('path', $path)->count();
 		if($count > 0 ){
 			DB::table($wnav_routes)->where('path', $path)->delete();
-			$this->create_route($path, $parameters);
+			self::create_route($path, $parameters);
 		}
 		else
 			DB::table($wnav_routes)->insert([
