@@ -463,6 +463,18 @@ class Queries{
 				->where('parameters', 'rlike', $params)
 				->delete();
 	}
+	
+	public static function routes_list($filter = []){
+		$wnav_routes = (Config('database.prefix')??'').'zmcms_routes_table';
+		return DB::table($wnav_routes)
+		->when($filter!=[], function ($query) use ($filter){
+				foreach($filter as $k => $v){
+					$query->orderBy($k, $v);
+				}
+				return $query;
+			})
+		->get();
+	}
 }
 /**
  * 
