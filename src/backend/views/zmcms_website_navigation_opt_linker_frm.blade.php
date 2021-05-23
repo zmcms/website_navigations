@@ -5,7 +5,7 @@
 			data-token="{{$obj['token']}}" 
 			data-objslug="{{$obj['objslug']}}" 
 			data-objecttype="{{$obj['objectType']}}" 
-			data-positiontoken="{{$p->token}}" 
+			data-positiontoken="{{$p->position}}" 
 
 
 
